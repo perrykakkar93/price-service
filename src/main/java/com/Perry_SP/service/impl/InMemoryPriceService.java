@@ -116,8 +116,10 @@ public class InMemoryPriceService implements PriceService {
 
     @Override
     public Map<String, PriceRecord> getAllPricesSnapshot() {
-        return published.get().entrySet().stream()
+        // Build a new map and return an unmodifiable view so callers cannot mutate internal state.
+        Map<String, PriceRecord> out = published.get().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().record));
+        return Collections.unmodifiableMap(out);
     }
 
     @Override
